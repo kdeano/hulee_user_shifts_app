@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:hulee_user_shifts_app/screens/monthly_calendar_view.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({super.key, required this.title});
+class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key, required this.title});
 
   final String title;
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -20,9 +21,7 @@ class _HomePageState extends State<HomePage> {
             fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
         title: Text(widget.title),
       ),
-      body: const Center(
-        child: Text('Home'),
-      ),
+      body: MonthlyCalendarView(),
     );
   }
 }

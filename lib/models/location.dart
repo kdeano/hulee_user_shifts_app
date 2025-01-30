@@ -7,7 +7,7 @@ class Location {
   final double distance;
   final String constituency;
   final String adminDistrict;
-  final Coordinates coordinates;
+  final Coordinates? coordinates;
 
   Location({
     required this.id,
@@ -16,7 +16,7 @@ class Location {
     required this.distance,
     required this.constituency,
     required this.adminDistrict,
-    required this.coordinates,
+    this.coordinates,
   });
 
   factory Location.fromJson(Map<String, dynamic> json) {
@@ -27,7 +27,9 @@ class Location {
       distance: json['distance'],
       constituency: json['constituency'],
       adminDistrict: json['adminDistrict'],
-      coordinates: Coordinates.fromJson(json['coordinates']),
+      coordinates: json['coordinates'] != null
+          ? Coordinates.fromJson(json['coordinates'])
+          : null,
     );
   }
 }

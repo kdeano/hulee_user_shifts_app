@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:hulee_user_shifts_app/pages/home_page.dart';
+import 'package:hulee_user_shifts_app/screens/home_screen.dart';
 
-main() async {
+Future main() async {
   runApp(const MyApp());
 }
 
@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       debugShowCheckedModeBanner: false,
-      home: const HomePage(title: 'Hulee Shifts'),
+      home: const HomeScreen(title: 'Hulee Shifts'),
     );
   }
 }
