@@ -3,8 +3,11 @@ import 'package:hulee_user_shifts_app/models/shift.dart';
 
 class ShiftDetailsPage extends StatefulWidget {
   final Shift shift;
+  final Function(Shift) onClockIn;
+  final Function(Shift) onClockOut;
 
-  ShiftDetailsPage({required this.shift});
+  ShiftDetailsPage(
+      {required this.shift, required this.onClockIn, required this.onClockOut});
 
   @override
   _ShiftDetailsPageState createState() => _ShiftDetailsPageState();
@@ -35,24 +38,31 @@ class _ShiftDetailsPageState extends State<ShiftDetailsPage> {
           },
         ),
       ),
-      body: Column(
-        children: [
-          Text('Start Time: ${widget.shift.startTime}'),
-          Text('End Time: ${widget.shift.finishTime}'),
-          Text('Location: ${widget.shift.location!.name}'),
-          SizedBox(height: 20),
-          ElevatedButton(
-            onPressed: _isClockInEnabled ? () {} : null,
-            child: Text('Clock In'),
-          ),
-          Text(_clockInValidationMessage),
-          SizedBox(height: 20),
-          ElevatedButton(
-            onPressed: _isClockOutEnabled ? () {} : null,
-            child: Text('Clock Out'),
-          ),
-          Text(_clockOutValidationMessage),
-        ],
+      body: Center(
+        child: Column(
+          children: [
+            SizedBox(height: 60),
+            Text('Start Time: ${widget.shift.startTime}'),
+            Text('End Time: ${widget.shift.finishTime}'),
+            Text('Location: ${widget.shift.location!.name}'),
+            SizedBox(height: 40),
+            ElevatedButton(
+              onPressed: _isClockInEnabled
+                  ? () => widget.onClockIn(widget.shift)
+                  : null,
+              child: Text('Clock In'),
+            ),
+            Text(_clockInValidationMessage),
+            SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: _isClockOutEnabled
+                  ? () => widget.onClockOut(widget.shift)
+                  : null,
+              child: Text('Clock Out'),
+            ),
+            Text(_clockOutValidationMessage),
+          ],
+        ),
       ),
     );
   }

@@ -14,6 +14,8 @@ class _MonthlyCalendarViewState extends State<MonthlyCalendarView> {
   CalendarFormat _calendarFormat = CalendarFormat.month;
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
+  final Map<String, bool> _clockInStatus = {};
+  final Map<String, bool> _clockOutStatus = {};
   late final ValueNotifier<List<Shift>> _selectedShifts;
 
   @override
@@ -37,6 +39,16 @@ class _MonthlyCalendarViewState extends State<MonthlyCalendarView> {
         _selectedShifts.value = _getShiftsForDay(_selectedDay!);
       });
     }
+  }
+
+  void _onClockIn(Shift shift) {
+    _clockInStatus[shift.id!] = true;
+    setState(() {});
+  }
+
+  void _onClockOut(Shift shift) {
+    _clockOutStatus[shift.id!] = true;
+    setState(() {});
   }
 
   List<Shift> _getShiftsForDay(DateTime day) {
@@ -98,10 +110,21 @@ class _MonthlyCalendarViewState extends State<MonthlyCalendarView> {
                 }).toList();
 
                 if (shiftsForDay.isNotEmpty) {
+                  String shiftId = shiftsForDay.first.id!;
+
+                  bool isClockedIn = _clockInStatus[shiftId] ?? false;
+                  bool isClockedOut = _clockOutStatus[shiftId] ?? false;
+
+                  Color color = isClockedIn && !isClockedOut
+                      ? Colors.orange
+                      : isClockedOut
+                          ? Colors.green
+                          : Colors.blue;
+
                   return Container(
                     margin: const EdgeInsets.all(4),
                     decoration: BoxDecoration(
-                      color: Colors.blue,
+                      color: color,
                       shape: BoxShape.circle,
                     ),
                     width: 20,
@@ -138,13 +161,16 @@ class _MonthlyCalendarViewState extends State<MonthlyCalendarView> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) =>
-                                    ShiftDetailsPage(shift: value[index]),
+                                builder: (context) => ShiftDetailsPage(
+                                  shift: value[index],
+                                  onClockIn: _onClockIn,
+                                  onClockOut: _onClockOut,
+                                ),
                               ),
                             );
                           },
-                          title:
-                              Text('${value[index].id} ${value[index].title}'),
+                          title: Text(
+                              '${value[index].title} - ${value[index].role} - ${value[index].location!.name} [${value[index].startTime} - ${value[index].finishTime}]'),
                         ),
                       );
                     });
