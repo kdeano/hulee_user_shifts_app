@@ -55,7 +55,7 @@ class ShiftDetailsPageState extends State<ShiftDetailsPage> {
       });
     } else {
       setState(() {
-        _isClockInEnabled = false;
+        _isClockInEnabled = true;
         _clockInValidationMessage =
             'You can only clock in 15 minutes before the shift starts.';
       });
@@ -80,7 +80,7 @@ class ShiftDetailsPageState extends State<ShiftDetailsPage> {
       });
     } else {
       setState(() {
-        _isClockOutEnabled = false;
+        _isClockOutEnabled = true;
         _clockOutValidationMessage =
             'You can only clock out 15 minutes after the shift ends.';
       });
@@ -118,36 +118,33 @@ class ShiftDetailsPageState extends State<ShiftDetailsPage> {
             Text('End Time: ${widget.shift.finishTime}'),
             Text('Location: ${widget.shift.location!.name}'),
             SizedBox(height: 40),
-            _isWithinShiftLocation
-                ? (widget.isClockedOut
-                    ? Text('You already completed the shift.')
-                    : Column(
-                        children: [
-                          widget.isClockedIn
-                              ? Container()
-                              : Column(
-                                  children: [
-                                    ElevatedButton(
-                                      onPressed: _isClockInEnabled
-                                          ? () => widget.onClockIn(widget.shift)
-                                          : null,
-                                      child: Text('Clock In'),
-                                    ),
-                                    Text(_clockInValidationMessage),
-                                  ],
+            widget.isClockedOut
+                ? Text('You already completed the shift.')
+                : Column(
+                    children: [
+                      widget.isClockedIn
+                          ? Container()
+                          : Column(
+                              children: [
+                                ElevatedButton(
+                                  onPressed: _isClockInEnabled
+                                      ? () => widget.onClockIn(widget.shift)
+                                      : null,
+                                  child: Text('Clock In'),
                                 ),
-                          SizedBox(height: 20),
-                          ElevatedButton(
-                            onPressed: _isClockOutEnabled
-                                ? () => widget.onClockOut(widget.shift)
-                                : null,
-                            child: Text('Clock Out'),
-                          ),
-                          Text(_clockOutValidationMessage),
-                        ],
-                      ))
-                : Text(
-                    'You must be within ${Consts.maxDistanceFromShiftLocation} meters of the shift location to clock in or out.'),
+                                Text(_clockInValidationMessage),
+                              ],
+                            ),
+                      SizedBox(height: 20),
+                      ElevatedButton(
+                        onPressed: _isClockOutEnabled
+                            ? () => widget.onClockOut(widget.shift)
+                            : null,
+                        child: Text('Clock Out'),
+                      ),
+                      Text(_clockOutValidationMessage),
+                    ],
+                  )
           ],
         ),
       ),
