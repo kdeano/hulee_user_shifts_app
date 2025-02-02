@@ -53,6 +53,11 @@ class MonthlyCalendarViewState extends State<MonthlyCalendarView> {
     setState(() {
       _showClockInToast = true;
     });
+    Future.delayed(const Duration(seconds: 2), () {
+      setState(() {
+        _showClockInToast = false;
+      });
+    });
   }
 
   void _onClockOut(Shift shift) {
@@ -60,6 +65,11 @@ class MonthlyCalendarViewState extends State<MonthlyCalendarView> {
     Navigator.pop(context);
     setState(() {
       _showClockOutToast = true;
+    });
+    Future.delayed(const Duration(seconds: 2), () {
+      setState(() {
+        _showClockOutToast = false;
+      });
     });
   }
 
