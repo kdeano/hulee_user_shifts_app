@@ -13,6 +13,9 @@ class Shift {
   final Location? location;
   final String? date;
 
+  double get locationLongitude => location?.coordinates?.longitude ?? 0.0;
+  double get locationLatitude => location?.coordinates?.latitude ?? 0.0;
+
   Shift({
     this.id,
     this.title,

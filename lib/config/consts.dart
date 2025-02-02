@@ -6,4 +6,6 @@ enum ToastType {
 class Consts {
   static const String apiUrl =
       "https://flutter-test-five.vercel.app/api/shifts/user";
+
+  static const int maxDistanceFromShiftLocation = 500;
 }

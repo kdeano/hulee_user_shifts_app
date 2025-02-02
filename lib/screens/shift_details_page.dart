@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:hulee_user_shifts_app/config/consts.dart';
+import 'package:hulee_user_shifts_app/helpers/location_helper.dart';
 import 'package:hulee_user_shifts_app/models/shift.dart';
 
 class ShiftDetailsPage extends StatefulWidget {
@@ -25,10 +28,12 @@ class ShiftDetailsPageState extends State<ShiftDetailsPage> {
   bool _isClockOutEnabled = false;
   String _clockInValidationMessage = '';
   String _clockOutValidationMessage = '';
+  bool _isWithinShiftLocation = false;
 
   @override
   void initState() {
     super.initState();
+    _getLocationDetails();
     _checkClockInStatus();
     _checkClockOutStatus();
   }
@@ -42,7 +47,8 @@ class ShiftDetailsPageState extends State<ShiftDetailsPage> {
         int.parse(widget.shift.startTime!.split(':')[0]),
         int.parse(widget.shift.startTime!.split(':')[1]));
     final fifteenMinutesBeforeStart = startTime.subtract(Duration(minutes: 15));
-    if (currentTime.isAfter(fifteenMinutesBeforeStart) &&
+    if (_isWithinShiftLocation &&
+        currentTime.isAfter(fifteenMinutesBeforeStart) &&
         currentTime.isBefore(startTime)) {
       setState(() {
         _isClockInEnabled = true;
@@ -65,7 +71,8 @@ class ShiftDetailsPageState extends State<ShiftDetailsPage> {
         int.parse(widget.shift.finishTime!.split(':')[0]),
         int.parse(widget.shift.finishTime!.split(':')[1]));
     final fifteenMinutesAfterEnd = endTime.add(Duration(minutes: 15));
-    if (widget.isClockedIn &&
+    if (_isWithinShiftLocation &&
+        widget.isClockedIn &&
         currentTime.isAfter(endTime) &&
         currentTime.isBefore(fifteenMinutesAfterEnd)) {
       setState(() {
@@ -78,6 +85,17 @@ class ShiftDetailsPageState extends State<ShiftDetailsPage> {
             'You can only clock out 15 minutes after the shift ends.';
       });
     }
+  }
+
+  void _getLocationDetails() async {
+    final userLocation = await LocationHelper.getCurrentLocation();
+    final shiftLocationLongitude = widget.shift.locationLongitude;
+    final shiftLocationLatitude = widget.shift.locationLatitude;
+    final distance = Geolocator.distanceBetween(userLocation.latitude,
+        userLocation.longitude, shiftLocationLatitude, shiftLocationLongitude);
+    setState(() {
+      _isWithinShiftLocation = distance <= Consts.maxDistanceFromShiftLocation;
+    });
   }
 
   @override
@@ -100,33 +118,36 @@ class ShiftDetailsPageState extends State<ShiftDetailsPage> {
             Text('End Time: ${widget.shift.finishTime}'),
             Text('Location: ${widget.shift.location!.name}'),
             SizedBox(height: 40),
-            widget.isClockedOut
-                ? Text('You already completed the shift.')
-                : Column(
-                    children: [
-                      widget.isClockedIn
-                          ? Container()
-                          : Column(
-                              children: [
-                                ElevatedButton(
-                                  onPressed: _isClockInEnabled
-                                      ? () => widget.onClockIn(widget.shift)
-                                      : null,
-                                  child: Text('Clock In'),
+            _isWithinShiftLocation
+                ? (widget.isClockedOut
+                    ? Text('You already completed the shift.')
+                    : Column(
+                        children: [
+                          widget.isClockedIn
+                              ? Container()
+                              : Column(
+                                  children: [
+                                    ElevatedButton(
+                                      onPressed: _isClockInEnabled
+                                          ? () => widget.onClockIn(widget.shift)
+                                          : null,
+                                      child: Text('Clock In'),
+                                    ),
+                                    Text(_clockInValidationMessage),
+                                  ],
                                 ),
-                                Text(_clockInValidationMessage),
-                              ],
-                            ),
-                      SizedBox(height: 20),
-                      ElevatedButton(
-                        onPressed: _isClockOutEnabled
-                            ? () => widget.onClockOut(widget.shift)
-                            : null,
-                        child: Text('Clock Out'),
-                      ),
-                      Text(_clockOutValidationMessage),
-                    ],
-                  ),
+                          SizedBox(height: 20),
+                          ElevatedButton(
+                            onPressed: _isClockOutEnabled
+                                ? () => widget.onClockOut(widget.shift)
+                                : null,
+                            child: Text('Clock Out'),
+                          ),
+                          Text(_clockOutValidationMessage),
+                        ],
+                      ))
+                : Text(
+                    'You must be within ${Consts.maxDistanceFromShiftLocation} meters of the shift location to clock in or out.'),
           ],
         ),
       ),
