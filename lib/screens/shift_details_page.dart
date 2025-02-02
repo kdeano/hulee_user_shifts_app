@@ -6,14 +6,17 @@ class ShiftDetailsPage extends StatefulWidget {
   final Function(Shift) onClockIn;
   final Function(Shift) onClockOut;
 
-  ShiftDetailsPage(
-      {required this.shift, required this.onClockIn, required this.onClockOut});
+  const ShiftDetailsPage(
+      {super.key,
+      required this.shift,
+      required this.onClockIn,
+      required this.onClockOut});
 
   @override
-  _ShiftDetailsPageState createState() => _ShiftDetailsPageState();
+  ShiftDetailsPageState createState() => ShiftDetailsPageState();
 }
 
-class _ShiftDetailsPageState extends State<ShiftDetailsPage> {
+class ShiftDetailsPageState extends State<ShiftDetailsPage> {
   bool _isClockInEnabled = false;
   bool _isClockOutEnabled = false;
   String _clockInValidationMessage = '';

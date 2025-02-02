@@ -5,11 +5,13 @@ import 'package:hulee_user_shifts_app/services/shifts_api.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class MonthlyCalendarView extends StatefulWidget {
+  const MonthlyCalendarView({super.key});
+
   @override
-  _MonthlyCalendarViewState createState() => _MonthlyCalendarViewState();
+  MonthlyCalendarViewState createState() => MonthlyCalendarViewState();
 }
 
-class _MonthlyCalendarViewState extends State<MonthlyCalendarView> {
+class MonthlyCalendarViewState extends State<MonthlyCalendarView> {
   List<Shift> _shifts = [];
   CalendarFormat _calendarFormat = CalendarFormat.month;
   DateTime _focusedDay = DateTime.now();
