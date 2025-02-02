@@ -24,9 +24,11 @@ class ToastState extends State<Toast> {
   void initState() {
     super.initState();
     Future.delayed(widget.duration, () {
-      setState(() {
-        _isVisible = false;
-      });
+      if (mounted) {
+        setState(() {
+          _isVisible = false;
+        });
+      }
     });
   }
 
