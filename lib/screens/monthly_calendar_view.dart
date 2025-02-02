@@ -48,7 +48,7 @@ class MonthlyCalendarViewState extends State<MonthlyCalendarView> {
   }
 
   void _onClockIn(Shift shift) {
-    _clockInStatus[shift.id!] = true;
+    _clockInStatus[shift.id] = true;
     Navigator.pop(context);
     setState(() {
       _showClockInToast = true;
@@ -56,7 +56,7 @@ class MonthlyCalendarViewState extends State<MonthlyCalendarView> {
   }
 
   void _onClockOut(Shift shift) {
-    _clockOutStatus[shift.id!] = true;
+    _clockOutStatus[shift.id] = true;
     Navigator.pop(context);
     setState(() {
       _showClockOutToast = true;
@@ -65,9 +65,7 @@ class MonthlyCalendarViewState extends State<MonthlyCalendarView> {
 
   List<Shift> _getShiftsForDay(DateTime day) {
     return _shifts.where((shift) {
-      if (shift.date == null) return false;
-
-      DateTime shiftDate = DateTime.parse(shift.date!);
+      DateTime shiftDate = DateTime.parse(shift.date);
       return isSameDay(shiftDate, day);
     }).toList();
   }
@@ -114,17 +112,12 @@ class MonthlyCalendarViewState extends State<MonthlyCalendarView> {
                 calendarBuilders: CalendarBuilders(
                   markerBuilder: (context, day, events) {
                     List<Shift> shiftsForDay = _shifts.where((shift) {
-                      if (shift.date == null) {
-                        return false;
-                      }
-
-                      DateTime shiftDate = DateTime.parse(shift.date!);
-
+                      DateTime shiftDate = DateTime.parse(shift.date);
                       return isSameDay(shiftDate, day);
                     }).toList();
 
                     if (shiftsForDay.isNotEmpty) {
-                      String shiftId = shiftsForDay.first.id!;
+                      String shiftId = shiftsForDay.first.id;
 
                       bool isClockedIn = _clockInStatus[shiftId] ?? false;
                       bool isClockedOut = _clockOutStatus[shiftId] ?? false;
@@ -180,17 +173,17 @@ class MonthlyCalendarViewState extends State<MonthlyCalendarView> {
                                       onClockIn: _onClockIn,
                                       onClockOut: _onClockOut,
                                       isClockedIn:
-                                          _clockInStatus[value[index].id!] ??
+                                          _clockInStatus[value[index].id] ??
                                               false,
                                       isClockedOut:
-                                          _clockOutStatus[value[index].id!] ??
+                                          _clockOutStatus[value[index].id] ??
                                               false,
                                     ),
                                   ),
                                 );
                               },
                               title: Text(
-                                  '${value[index].title} - ${value[index].role} - ${value[index].location!.name} [${value[index].startTime} - ${value[index].finishTime}]'),
+                                  '${value[index].title} - ${value[index].role} - ${value[index].location.name} [${value[index].startTime} - ${value[index].finishTime}]'),
                             ),
                           );
                         });
