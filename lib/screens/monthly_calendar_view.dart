@@ -20,6 +20,8 @@ class MonthlyCalendarViewState extends State<MonthlyCalendarView> {
   DateTime? _selectedDay;
   bool _showClockInToast = false;
   bool _showClockOutToast = false;
+  bool _isClockedIn = false;
+  bool _isClockedOut = false;
   final Map<String, bool> _clockInStatus = {};
   final Map<String, bool> _clockOutStatus = {};
   late final ValueNotifier<List<Shift>> _selectedShifts;
@@ -126,12 +128,12 @@ class MonthlyCalendarViewState extends State<MonthlyCalendarView> {
                     if (shiftsForDay.isNotEmpty) {
                       String shiftId = shiftsForDay.first.id!;
 
-                      bool isClockedIn = _clockInStatus[shiftId] ?? false;
-                      bool isClockedOut = _clockOutStatus[shiftId] ?? false;
+                      _isClockedIn = _clockInStatus[shiftId] ?? false;
+                      _isClockedOut = _clockOutStatus[shiftId] ?? false;
 
-                      Color color = isClockedIn && !isClockedOut
+                      Color color = _isClockedIn && !_isClockedOut
                           ? Colors.orange
-                          : isClockedOut
+                          : _isClockedOut
                               ? Colors.green
                               : Colors.blue;
 
@@ -179,6 +181,7 @@ class MonthlyCalendarViewState extends State<MonthlyCalendarView> {
                                       shift: value[index],
                                       onClockIn: _onClockIn,
                                       onClockOut: _onClockOut,
+                                      isClockedIn: _isClockedIn,
                                     ),
                                   ),
                                 );

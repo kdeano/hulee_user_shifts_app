@@ -5,12 +5,14 @@ class ShiftDetailsPage extends StatefulWidget {
   final Shift shift;
   final Function(Shift) onClockIn;
   final Function(Shift) onClockOut;
+  final bool isClockedIn;
 
   const ShiftDetailsPage(
       {super.key,
       required this.shift,
       required this.onClockIn,
-      required this.onClockOut});
+      required this.onClockOut,
+      required this.isClockedIn});
 
   @override
   ShiftDetailsPageState createState() => ShiftDetailsPageState();
@@ -61,7 +63,8 @@ class ShiftDetailsPageState extends State<ShiftDetailsPage> {
         int.parse(widget.shift.finishTime!.split(':')[0]),
         int.parse(widget.shift.finishTime!.split(':')[1]));
     final fifteenMinutesAfterEnd = endTime.add(Duration(minutes: 15));
-    if (currentTime.isAfter(endTime) &&
+    if (widget.isClockedIn &&
+        currentTime.isAfter(endTime) &&
         currentTime.isBefore(fifteenMinutesAfterEnd)) {
       setState(() {
         _isClockOutEnabled = true;
