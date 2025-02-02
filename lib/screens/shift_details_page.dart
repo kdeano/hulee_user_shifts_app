@@ -80,7 +80,7 @@ class ShiftDetailsPageState extends State<ShiftDetailsPage> {
       });
     } else {
       setState(() {
-        _isClockOutEnabled = false;
+        _isClockOutEnabled = true;
         _clockOutValidationMessage =
             'You can only clock out 15 minutes before the shift ends.';
       });
