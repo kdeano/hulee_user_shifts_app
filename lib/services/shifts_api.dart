@@ -7,8 +7,14 @@ import 'package:hulee_user_shifts_app/models/shift.dart';
 class ShiftsApi {
   static Future<List<Shift>> getShifts() async {
     final url = Consts.apiUrl;
+    final headers = {
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "GET",
+      "Access-Control-Allow-Headers":
+          "Origin, X-Requested-With, Content-Type, Accept"
+    };
     try {
-      final res = await http.get(Uri.parse(url));
+      final res = await http.get(Uri.parse(url), headers: headers);
 
       if (res.statusCode == 200) {
         final jsonData = res.body;
