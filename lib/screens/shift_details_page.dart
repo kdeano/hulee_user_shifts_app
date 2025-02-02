@@ -29,47 +29,6 @@ class ShiftDetailsPageState extends State<ShiftDetailsPage> {
     _checkClockOutStatus();
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Shift Details'),
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-      ),
-      body: Center(
-        child: Column(
-          children: [
-            SizedBox(height: 60),
-            Text('Start Time: ${widget.shift.startTime}'),
-            Text('End Time: ${widget.shift.finishTime}'),
-            Text('Location: ${widget.shift.location!.name}'),
-            SizedBox(height: 40),
-            ElevatedButton(
-              onPressed: _isClockInEnabled
-                  ? () => widget.onClockIn(widget.shift)
-                  : null,
-              child: Text('Clock In'),
-            ),
-            Text(_clockInValidationMessage),
-            SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: _isClockOutEnabled
-                  ? () => widget.onClockOut(widget.shift)
-                  : null,
-              child: Text('Clock Out'),
-            ),
-            Text(_clockOutValidationMessage),
-          ],
-        ),
-      ),
-    );
-  }
-
   void _checkClockInStatus() {
     final currentTime = DateTime.now();
     final startTime = DateTime(
@@ -114,5 +73,46 @@ class ShiftDetailsPageState extends State<ShiftDetailsPage> {
             'You can only clock out 15 minutes after the shift ends.';
       });
     }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Shift Details'),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+      ),
+      body: Center(
+        child: Column(
+          children: [
+            SizedBox(height: 60),
+            Text('Start Time: ${widget.shift.startTime}'),
+            Text('End Time: ${widget.shift.finishTime}'),
+            Text('Location: ${widget.shift.location!.name}'),
+            SizedBox(height: 40),
+            ElevatedButton(
+              onPressed: _isClockInEnabled
+                  ? () => widget.onClockIn(widget.shift)
+                  : null,
+              child: Text('Clock In'),
+            ),
+            Text(_clockInValidationMessage),
+            SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: _isClockOutEnabled
+                  ? () => widget.onClockOut(widget.shift)
+                  : null,
+              child: Text('Clock Out'),
+            ),
+            Text(_clockOutValidationMessage),
+          ],
+        ),
+      ),
+    );
   }
 }
