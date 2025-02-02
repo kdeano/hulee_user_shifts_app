@@ -6,13 +6,15 @@ class ShiftDetailsPage extends StatefulWidget {
   final Function(Shift) onClockIn;
   final Function(Shift) onClockOut;
   final bool isClockedIn;
+  final bool isClockedOut;
 
   const ShiftDetailsPage(
       {super.key,
       required this.shift,
       required this.onClockIn,
       required this.onClockOut,
-      required this.isClockedIn});
+      required this.isClockedIn,
+      required this.isClockedOut});
 
   @override
   ShiftDetailsPageState createState() => ShiftDetailsPageState();
@@ -98,21 +100,33 @@ class ShiftDetailsPageState extends State<ShiftDetailsPage> {
             Text('End Time: ${widget.shift.finishTime}'),
             Text('Location: ${widget.shift.location!.name}'),
             SizedBox(height: 40),
-            ElevatedButton(
-              onPressed: _isClockInEnabled
-                  ? () => widget.onClockIn(widget.shift)
-                  : null,
-              child: Text('Clock In'),
-            ),
-            Text(_clockInValidationMessage),
-            SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: _isClockOutEnabled
-                  ? () => widget.onClockOut(widget.shift)
-                  : null,
-              child: Text('Clock Out'),
-            ),
-            Text(_clockOutValidationMessage),
+            widget.isClockedOut
+                ? Text('You already completed the shift.')
+                : Column(
+                    children: [
+                      widget.isClockedIn
+                          ? Container()
+                          : Column(
+                              children: [
+                                ElevatedButton(
+                                  onPressed: _isClockInEnabled
+                                      ? () => widget.onClockIn(widget.shift)
+                                      : null,
+                                  child: Text('Clock In'),
+                                ),
+                                Text(_clockInValidationMessage),
+                              ],
+                            ),
+                      SizedBox(height: 20),
+                      ElevatedButton(
+                        onPressed: _isClockOutEnabled
+                            ? () => widget.onClockOut(widget.shift)
+                            : null,
+                        child: Text('Clock Out'),
+                      ),
+                      Text(_clockOutValidationMessage),
+                    ],
+                  ),
           ],
         ),
       ),
