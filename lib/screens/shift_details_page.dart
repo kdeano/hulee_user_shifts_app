@@ -70,19 +70,19 @@ class ShiftDetailsPageState extends State<ShiftDetailsPage> {
         currentTime.day,
         int.parse(widget.shift.finishTime!.split(':')[0]),
         int.parse(widget.shift.finishTime!.split(':')[1]));
-    final fifteenMinutesAfterEnd = endTime.add(Duration(minutes: 15));
+    final fifteenMinutesBeforeEnd = endTime.subtract(Duration(minutes: 15));
     if (_isWithinShiftLocation &&
         widget.isClockedIn &&
-        currentTime.isAfter(endTime) &&
-        currentTime.isBefore(fifteenMinutesAfterEnd)) {
+        currentTime.isAfter(fifteenMinutesBeforeEnd) &&
+        currentTime.isBefore(endTime)) {
       setState(() {
         _isClockOutEnabled = true;
       });
     } else {
       setState(() {
-        _isClockOutEnabled = true;
+        _isClockOutEnabled = false;
         _clockOutValidationMessage =
-            'You can only clock out 15 minutes after the shift ends.';
+            'You can only clock out 15 minutes before the shift ends.';
       });
     }
   }
