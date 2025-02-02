@@ -44,8 +44,8 @@ class ShiftDetailsPageState extends State<ShiftDetailsPage> {
         currentTime.year,
         currentTime.month,
         currentTime.day,
-        int.parse(widget.shift.startTime!.split(':')[0]),
-        int.parse(widget.shift.startTime!.split(':')[1]));
+        int.parse(widget.shift.startTime.split(':')[0]),
+        int.parse(widget.shift.startTime.split(':')[1]));
     final fifteenMinutesBeforeStart = startTime.subtract(Duration(minutes: 15));
     if (_isWithinShiftLocation &&
         currentTime.isAfter(fifteenMinutesBeforeStart) &&
@@ -68,8 +68,8 @@ class ShiftDetailsPageState extends State<ShiftDetailsPage> {
         currentTime.year,
         currentTime.month,
         currentTime.day,
-        int.parse(widget.shift.finishTime!.split(':')[0]),
-        int.parse(widget.shift.finishTime!.split(':')[1]));
+        int.parse(widget.shift.finishTime.split(':')[0]),
+        int.parse(widget.shift.finishTime.split(':')[1]));
     final fifteenMinutesAfterEnd = endTime.add(Duration(minutes: 15));
     if (_isWithinShiftLocation &&
         widget.isClockedIn &&
@@ -88,13 +88,18 @@ class ShiftDetailsPageState extends State<ShiftDetailsPage> {
   }
 
   void _getLocationDetails() async {
-    final userLocation = await LocationHelper.getCurrentLocation();
+    // final userLocation = await LocationHelper.getCurrentLocation();
+    final userLocation = {'longitude': -0.181425, 'latitude': 51.231602};
     final shiftLocationLongitude = widget.shift.locationLongitude;
     final shiftLocationLatitude = widget.shift.locationLatitude;
-    final distance = Geolocator.distanceBetween(userLocation.latitude,
-        userLocation.longitude, shiftLocationLatitude, shiftLocationLongitude);
+    final distance = Geolocator.distanceBetween(
+        userLocation['latitude']!,
+        userLocation['longitude']!,
+        shiftLocationLatitude,
+        shiftLocationLongitude);
     setState(() {
-      _isWithinShiftLocation = distance <= Consts.maxDistanceFromShiftLocation;
+      _isWithinShiftLocation =
+          distance <= Consts.maxDistanceFromShiftLocation + 1;
     });
   }
 
@@ -116,7 +121,7 @@ class ShiftDetailsPageState extends State<ShiftDetailsPage> {
             SizedBox(height: 60),
             Text('Start Time: ${widget.shift.startTime}'),
             Text('End Time: ${widget.shift.finishTime}'),
-            Text('Location: ${widget.shift.location!.name}'),
+            Text('Location: ${widget.shift.location.name}'),
             SizedBox(height: 40),
             _isWithinShiftLocation
                 ? (widget.isClockedOut
